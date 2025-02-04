@@ -35,7 +35,7 @@ class SearchProblem:
 
     def isGoalState(self, state):
         """
-          state: Search state
+        state: Search state
 
         Returns True if and only if the state is a valid goal state.
         """
@@ -43,7 +43,7 @@ class SearchProblem:
 
     def getSuccessors(self, state):
         """
-          state: Search state
+        state: Search state
 
         For a given state, this should return a list of triples, (successor,
         action, stepCost), where 'successor' is a successor to the current
@@ -54,7 +54,7 @@ class SearchProblem:
 
     def getCostOfActions(self, actions):
         """
-         actions: A list of actions to take
+        actions: A list of actions to take
 
         This method returns the total cost of a particular sequence of actions.
         The sequence must be composed of legal moves.
@@ -87,16 +87,81 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    
+# Depth-First Search (DFS) implementation
+def depthFirstSearch(problem):
+    """Search the deepest nodes in the search tree first using a stack."""
+    # Create a stack to store nodes that need to be explored
+    stack = util.Stack()
+    # Set to keep track of visited nodes to avoid cycles
+    visited = set()
+    # Push the start state with an empty path into the stack
+    stack.push((problem.getStartState(), []))  # (state, path)
+    
+    # Continue searching until there are no nodes left in the stack
+    while not stack.isEmpty():
+        # Pop the most recently added node from the stack
+        state, path = stack.pop()
+        
+        # Check if the current state is the goal state
+        if problem.isGoalState(state):
+            return path  # Return the sequence of actions to reach the goal
+        
+        # If the state has not been visited yet, process it
+        if state not in visited:
+            visited.add(state)  # Mark the state as visited
+            # Retrieve successors of the current state
+            for successor, action, _ in problem.getSuccessors(state):
+                # Push each successor to the stack with the updated path
+                stack.push((successor, path + [action]))
+    
+    return []
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    queue = util.Queue()  # Create a queue for storing nodes
+    visited = set()  # Set to track visited nodes
+    queue.push((problem.getStartState(), []))  # Push the start state with an empty path
+    
+    while not queue.isEmpty():
+        state, path = queue.pop()  # Dequeue the oldest node
+        
+        if problem.isGoalState(state):
+            return path  # Return the sequence of actions to reach the goal
+        
+        if state not in visited:
+            visited.add(state)
+            for successor, action, _ in problem.getSuccessors(state):
+                queue.push((successor, path + [action]))
+    
+    return []
+    
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    pq = util.PriorityQueue()  # Create a priority queue for storing nodes
+    visited = set()  # Set to track visited nodes
+    pq.push((problem.getStartState(), [], 0), 0)  # Push the start state with cost 0
+    
+    while not pq.isEmpty():
+        state, path, cost = pq.pop()  # Pop the node with the lowest cost
+        
+        if problem.isGoalState(state):
+            return path  # Return the sequence of actions to reach the goal
+        
+        if state not in visited:
+            visited.add(state)
+            for successor, action, step_cost in problem.getSuccessors(state):
+                new_cost = cost + step_cost  # Compute total cost
+                pq.push((successor, path + [action], new_cost), new_cost)
+    
+    return []
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
@@ -109,6 +174,25 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    pq = util.PriorityQueue()  # Create a priority queue for storing nodes
+    visited = set()  # Set to track visited nodes
+    pq.push((problem.getStartState(), [], 0), 0)  # Push the start state with cost 0
+    
+    while not pq.isEmpty():
+        state, path, cost = pq.pop()  # Pop the node with the lowest combined cost and heuristic
+        
+        if problem.isGoalState(state):
+            return path  # Return the sequence of actions to reach the goal
+        
+        if state not in visited:
+            visited.add(state)
+            for successor, action, step_cost in problem.getSuccessors(state):
+                new_cost = cost + step_cost  # Compute total cost
+                priority = new_cost + heuristic(successor, problem)  # Compute A* priority
+                pq.push((successor, path + [action], new_cost), priority)
+    
+    return []
+
     util.raiseNotDefined()
 
 
