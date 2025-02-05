@@ -1,20 +1,43 @@
 Answer questions marked as "QS"
 
 QS1.1:
-
+For DFS, I used a stack because it follows the Last In, First Out (LIFO) order.
+ This makes it easy to explore a path deeply before backtracking when necessary.
+ Since DFS keeps going down one path until it hits a dead-end,
+  a stack is the best choice to keep track of the unexplored paths.
 
 QS1.2:
+The exploration order is mostly what I expected.
+ Since DFS goes as deep as possible before backtracking,
+ I noticed that Pacman doesn’t always take the most direct path to the goal.
+ He explores a lot of unnecessary spaces, which isn’t ideal.
+ Pacman does not visit every explored square on the way to the goal because DFS
+  sometimes expands nodes it doesn’t actually need for the final path.
+
 
 
 QS2.1:
-
+For BFS, I used a queue since it follows the First In, First Out (FIFO) order.
+ This means the first nodes added to the queue get explored first,
+ which ensures that BFS finds the shortest path in terms of the number of actions taken.
 
 QS3.1:
+For Uniform Cost Search (UCS), I used a simple cost function where each move has a cost of 1.
+ This ensures that UCS finds the shortest path in terms of actual movement cost.
 
+For StayEastSearchAgent and StayWestSearchAgent,
+ I used an exponential cost function where moving west had a higher cost and moving east had a lower cost.
+ This forces Pacman to prefer moving east or west, depending on the agent.
 
 
 QS4.1:
 
+The nullHeuristic always returns 0, which means A* behaves like UCS and explores a lot of unnecessary nodes.
+This makes it slow but still guarantees the optimal solution.
+
+The Manhattan distance heuristic estimates the distance to the goal by summing the absolute differences in x and y coordinates.
+ This makes A* much faster because it prioritizes nodes that seem closer to the goal.
+  Since the Manhattan distance never overestimates the true cost, it helps A* expand fewer nodes while still guaranteeing the optimal path.
 
 QS5.1:
 
